@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="app_name">AndroidServiceExample</string>
+    <string name="main_exp">The purpose of the app is to study the role of Android
+                            system in creating and managing the lifecycle of
+                            Bound and Local Services</string>
+    <string name="pdf_download">PDF Download Activity</string>
+    <string name="close">close</string>
+
+    <string name="download_msg">Please provide list of five SJSU PDFs to download</string>
+    <string name="pdf_file_1">PDF1 file location</string>
+    <string name="pdf_file_2">PDF2 file location</string>
+    <string name="pdf_file_3">PDF3 file location</string>
+    <string name="pdf_file_4">PDF4 file location</string>
+    <string name="pdf_file_5">PDF5 file location</string>
+
+    <string name="start_download">Start Download</string>
+
+
+</resources>
