@@ -1,5 +1,6 @@
 package com.example.service.downloadfiles.service;
 
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -7,11 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import com.example.service.downloadfiles.activity.DownloadActivity;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.example.service.downloadfiles.activity.DownloadActivity;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
  */
 public class PdfService extends Service {
 
+    //ProgressDialog progressBar;
     ArrayList<String> url_list;
 
     @Override
@@ -41,10 +46,18 @@ public class PdfService extends Service {
 
         url_list=intent.getStringArrayListExtra("url_list");
 
-        for(int i=0;i<url_list.size();i++) {
-            DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
-            downloadFilesTask.execute(url_list.get(i));
-        }
+
+        DownloadFilesTask downloadFilesTask = new DownloadFilesTask();
+        downloadFilesTask.execute(url_list);
+
+        /*progressBar=new ProgressDialog(DownloadActivity.this);
+        progressBar.setTitle("Downloading Files");
+        progressBar.setMessage("Downloading...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setMax(100);
+        progressBar.setCancelable(true);
+        progressBar.show();*/
+
 
         return START_STICKY;
     }
@@ -60,23 +73,39 @@ public class PdfService extends Service {
     }
 
 
-    private class DownloadFilesTask extends AsyncTask<String,Void,Void>{
+    private class DownloadFilesTask extends AsyncTask<ArrayList<String>,Integer,Void>{
 
         String LOG_TAG=DownloadFilesTask.class.getSimpleName();
 
+        ArrayList<String> url_list;
+
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Void doInBackground(ArrayList<String>... arrayLists) {
+
+
+            url_list = arrayLists[0];
+            for (int i = 0; i < url_list.size(); i++) {
+                String url = url_list.get(i);
+                downloadFile(url);
+            }
+
+            return null;
+        }
+
+        private void downloadFile(String url){
+
             HttpURLConnection urlConnection;
 
             try{
-                String str_url=strings[0];
-                URL url=new URL(str_url);
+                String str_url=url;
 
-                urlConnection=(HttpURLConnection)url.openConnection();
+                URL pdf_url=new URL(str_url);
+
+                urlConnection=(HttpURLConnection)pdf_url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                //int file_prog=urlConnection.getContentLength();
+                int file_len=urlConnection.getContentLength();
 
                 File sd_root= new File("/sdcard/"+"download/");
                 File new_file=new File(sd_root,str_url.substring(str_url.lastIndexOf('/') + 1));
@@ -89,10 +118,7 @@ public class PdfService extends Service {
                 int count;
                 while ((count = inputStream.read(file_data)) != -1) {
                     total += count;
-                    // publishing the progress....
-                    Bundle result = new Bundle();
-                    //result.putInt("progress" ,(int) (total * 100 / file_prog));
-                    //receiver.send(UPDATE_PROGRESS, resultData);
+                    publishProgress((int) (total * 100 / file_len));
                     outputStream.write(file_data, 0, count);
                 }
 
@@ -103,15 +129,20 @@ public class PdfService extends Service {
             }catch (IOException e){
                 Log.e(LOG_TAG,e.toString());
             }
-
-            return null;
         }
 
+        protected void onProgressUpdate(Integer... progress) {
+            //progressBar.setProgress(progress[0]);
+            /*if(url_list != null) {
+                progressBar.setMessage("Loading " + (rowItems.size()+1) + "/" + noOfURLs);
+            }*/
+        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             stopSelf();
+            //progressBar.dismiss();
         }
     }
 }
