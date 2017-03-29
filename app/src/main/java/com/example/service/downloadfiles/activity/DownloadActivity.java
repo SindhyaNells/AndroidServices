@@ -9,6 +9,10 @@ import android.widget.EditText;
 
 import com.example.service.downloadfiles.service.PdfIntentService;
 import com.example.service.downloadfiles.R;
+import com.example.service.downloadfiles.service.PdfService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sindhya on 3/25/17.
@@ -42,12 +46,26 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
 
+        ArrayList<String> urlList=new ArrayList<>();
+        urlList.add("http://www.cisco.com/c/dam/en_us/about/annual-report/2016-annual-report-full.pdf");
+        urlList.add("http://www.cisco.com/web/about/ac79/docs/innov/IoE_Economy.pdf");
+        urlList.add("http://www.cisco.com/web/strategy/docs/gov/everything-for-cities.pdf");
+        urlList.add("http://www.cisco.com/web/offer/gist_ty2_asset/Cisco_2014_ASR.pdf");
+        urlList.add("http://www.cisco.com/web/offer/emear/38586/images/Presentations/P3.pdf");
+
         int id=view.getId();
         if(id==R.id.btn_download_files){
 
-            Intent intent=new Intent(this,PdfIntentService.class);
-            intent.putExtra("url","http://www.cisco.com/c/dam/en_us/about/annual-report/2016-annual-report-full.pdf");
+            //using service
+            Intent intent=new Intent(this, PdfService.class);
+            intent.putStringArrayListExtra("url_list",urlList);
             startService(intent);
+
+
+            //using intent service
+            /*Intent intent=new Intent(this,PdfIntentService.class);
+            intent.putExtra("url",urlList.get(0));
+            startService(intent);*/
         }
 
     }

@@ -47,7 +47,7 @@ public class PdfIntentService extends IntentService {
             //int file_prog=urlConnection.getContentLength();
 
             File sd_root= new File("/sdcard/"+"download/");
-            File new_file=new File(sd_root,"file1.pdf");
+            File new_file=new File(sd_root,str_url.substring(str_url.lastIndexOf('/') + 1));
 
             InputStream inputStream=new BufferedInputStream(urlConnection.getInputStream());
             OutputStream outputStream=new FileOutputStream(new_file);
