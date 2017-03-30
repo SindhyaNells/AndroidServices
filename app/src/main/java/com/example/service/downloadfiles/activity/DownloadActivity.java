@@ -1,11 +1,17 @@
 package com.example.service.downloadfiles.activity;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.service.downloadfiles.service.PdfIntentService;
 import com.example.service.downloadfiles.R;
@@ -19,6 +25,8 @@ import java.util.List;
  */
 public class DownloadActivity extends AppCompatActivity implements View.OnClickListener{
 
+    IntentFilter intentFilter;
+
     EditText editTextPdf1;
     EditText editTextPdf2;
     EditText editTextPdf3;
@@ -26,6 +34,8 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
     EditText editTextPdf5;
 
     Button btnDownloadFiles;
+
+    //ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,8 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
 
         btnDownloadFiles=(Button)findViewById(R.id.btn_download_files);
         btnDownloadFiles.setOnClickListener(this);
+
+
 
     }
 
@@ -56,6 +68,20 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
         int id=view.getId();
         if(id==R.id.btn_download_files){
 
+            /*progressBar=new ProgressDialog(DownloadActivity.this);
+            progressBar.setTitle("Downloading Files");
+            progressBar.setMessage("Downloading...");
+            progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressBar.setMax(100);
+            progressBar.setCancelable(true);
+            progressBar.show();*/
+
+            intentFilter = new IntentFilter();
+            intentFilter.addAction("FILE_DOWNLOAD");
+            intentFilter.addAction("DOWNLOAD_PROGRESS");
+
+            registerReceiver(progressBroadcastReceiver, intentFilter);
+
             //using service
             Intent intent=new Intent(this, PdfService.class);
             intent.putStringArrayListExtra("url_list",urlList);
@@ -68,5 +94,32 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
             startService(intent);*/
         }
 
+    }
+
+    private BroadcastReceiver progressBroadcastReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.getAction().equals("FILE_DOWNLOAD")){
+                //int progress=Integer.parseInt(intent.getExtras().get("progress"));
+                //Log.d("Broadcast progress",String.valueOf(intent.getExtras().get("progress")));
+
+                //progressBar.dismiss();
+                Toast.makeText(DownloadActivity.this, "Files Downloaded!", Toast.LENGTH_SHORT).show();
+
+            }
+
+            if(intent.getAction().equals("DOWNLOAD_PROGRESS")){
+                int prog=getIntent().getIntExtra("progress",0);
+                //progressBar.setProgress(prog);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(progressBroadcastReceiver);
     }
 }
