@@ -26,12 +26,21 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.BoundedDownloadActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".service.PdfIntentService"
             android:exported="false"/>
 
         <service android:name=".service.PdfService"
             android:exported="false"/>
-        s
+
+        <service android:name=".service.PdfBoundService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

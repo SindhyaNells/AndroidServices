@@ -47,19 +47,6 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_download);
-        editTextPdf1=(EditText)findViewById(R.id.edit_text_pdf1);
-        editTextPdf2=(EditText)findViewById(R.id.edit_text_pdf2);
-        editTextPdf3=(EditText)findViewById(R.id.edit_text_pdf3);
-        editTextPdf4=(EditText)findViewById(R.id.edit_text_pdf4);
-        editTextPdf5=(EditText)findViewById(R.id.edit_text_pdf5);
-
-        btnDownloadFiles=(Button)findViewById(R.id.btn_download_files);
-        btnDownloadFiles.setOnClickListener(this);
-
-    }
-
-    @Override
-    public void onClick(View view) {
 
         editTextPdf1=(EditText)findViewById(R.id.edit_text_pdf1);
         editTextPdf1.setText("http://www.cisco.com/c/dam/en_us/about/annual-report/2016-annual-report-full.pdf");
@@ -71,6 +58,16 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
         editTextPdf4.setText("http://www.cisco.com/web/offer/gist_ty2_asset/Cisco_2014_ASR.pdf");
         editTextPdf5=(EditText)findViewById(R.id.edit_text_pdf5);
         editTextPdf5.setText("http://www.cisco.com/web/offer/emear/38586/images/Presentations/P3.pdf");
+
+
+        btnDownloadFiles=(Button)findViewById(R.id.btn_download_files);
+        btnDownloadFiles.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
 
         int id=view.getId();
         if(id==R.id.btn_download_files){

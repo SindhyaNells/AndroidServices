@@ -31,7 +31,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id=view.getId();
 
         if(id==R.id.btn_download){
-            Intent download_intent=new Intent(MainActivity.this,BoundedDownloadActivity.class);
+            //bounded service
+            /*Intent download_intent=new Intent(MainActivity.this,BoundedDownloadActivity.class);
+            startActivity(download_intent);*/
+
+            //started service
+            Intent download_intent=new Intent(MainActivity.this,DownloadActivity.class);
             startActivity(download_intent);
         }else if(id==R.id.btn_close){
             MainActivity.this.finish();
